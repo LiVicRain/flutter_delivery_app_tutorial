@@ -1,6 +1,8 @@
 import 'package:delivery_app_tutorial/common/constants/data.dart';
+import 'package:delivery_app_tutorial/common/dio/dio.dart';
 import 'package:delivery_app_tutorial/restaurant/components/restaurant_card.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
+import 'package:delivery_app_tutorial/restaurant/repository/restaurant_repository.dart';
 import 'package:delivery_app_tutorial/restaurant/views/restaurant_detail_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +10,21 @@ import 'package:flutter/material.dart';
 class RestaurantScreen extends StatelessWidget {
   const RestaurantScreen({super.key});
 
-  Future<List> paginationRestaurant() async {
+  Future<List<Restaurant>> paginationRestaurant() async {
     final dio = Dio();
 
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    dio.interceptors.add(CustomInterceptor(storage: storage));
 
-    final res = await dio.get('http://$ip/restaurant',
-        options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
-    return res.data['data'];
+    // final Response res = await dio.get('http://$ip/restaurant',
+    //     options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+
+    final res =
+        await RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant')
+            .paginate();
+
+    return res.data;
   }
 
   @override
@@ -27,7 +35,7 @@ class RestaurantScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: FutureBuilder(
             future: paginationRestaurant(),
-            builder: (context, AsyncSnapshot<List> snapshot) {
+            builder: (context, AsyncSnapshot<List<Restaurant>> snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
                   child: CircularProgressIndicator(),
@@ -36,8 +44,7 @@ class RestaurantScreen extends StatelessWidget {
               return ListView.separated(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final item = snapshot.data![index];
-                  final pItem = Restaurant.fromJson(json: item);
+                  final pItem = snapshot.data![index];
 
                   return GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
