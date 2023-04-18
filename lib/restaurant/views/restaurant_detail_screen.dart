@@ -1,18 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:delivery_app_tutorial/common/dio/dio.dart';
+import 'package:delivery_app_tutorial/common/services/dio/dio.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
 import 'package:delivery_app_tutorial/restaurant/repository/restaurant_repository.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:delivery_app_tutorial/common/layouts/default_layout.dart';
 import 'package:delivery_app_tutorial/product/components/product_card.dart';
 import 'package:delivery_app_tutorial/restaurant/components/restaurant_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/constants/data.dart';
 
-class RestaurantDetailScreen extends StatelessWidget {
+class RestaurantDetailScreen extends ConsumerWidget {
   final String id;
 
   const RestaurantDetailScreen({
@@ -20,10 +20,8 @@ class RestaurantDetailScreen extends StatelessWidget {
     required this.id,
   }) : super(key: key);
 
-  Future<RestaurantDetail> getRestaurantDetail() async {
-    final dio = Dio();
-
-    dio.interceptors.add(CustomInterceptor(storage: storage));
+  Future<RestaurantDetail> getRestaurantDetail(WidgetRef ref) async {
+    final dio = ref.watch(dioProvider);
 
     final repository =
         RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
@@ -41,11 +39,11 @@ class RestaurantDetailScreen extends StatelessWidget {
     return res.data; */
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
         title: "붙타는 떡볶이",
         body: FutureBuilder<RestaurantDetail>(
-          future: getRestaurantDetail(),
+          future: getRestaurantDetail(ref),
           builder: (context, AsyncSnapshot<RestaurantDetail> snapshot) {
             if (snapshot.hasError) {
               return Center(
