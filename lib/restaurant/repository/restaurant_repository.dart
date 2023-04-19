@@ -1,4 +1,5 @@
 import 'package:delivery_app_tutorial/common/models/cursor_pagination_model.dart';
+import 'package:delivery_app_tutorial/common/models/pagination_params.dart';
 import 'package:delivery_app_tutorial/common/services/dio/dio.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
@@ -31,8 +32,10 @@ abstract class RestaurantRepository {
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPagination<RestaurantModel>>
-      paginate(); // abstract 이기 때문에 body를 없앤다. 어떤 함수가 있는지만 적는다
+  Future<CursorPagination<RestaurantModel>> paginate({
+    @Queries() PaginationParams? paginationParams = const PaginationParams(),
+  });
+  // build 타임 constant 이기 때문에 cosnt 를 넣어줘야 한다
 
   // http://$ip/restaurant/:id
   @GET('/{id}')
