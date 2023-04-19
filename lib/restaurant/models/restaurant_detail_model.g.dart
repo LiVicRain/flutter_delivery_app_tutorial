@@ -6,8 +6,9 @@ part of 'restaurant_detail_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RestaurantDetail _$RestaurantDetailFromJson(Map<String, dynamic> json) =>
-    RestaurantDetail(
+RestaurantDetailModel _$RestaurantDetailModelFromJson(
+        Map<String, dynamic> json) =>
+    RestaurantDetailModel(
       id: json['id'] as String,
       name: json['name'] as String,
       thumbUrl: DataUtils.pathToUrl(json['thumbUrl'] as String),
@@ -24,7 +25,8 @@ RestaurantDetail _$RestaurantDetailFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$RestaurantDetailToJson(RestaurantDetail instance) =>
+Map<String, dynamic> _$RestaurantDetailModelToJson(
+        RestaurantDetailModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

@@ -2,7 +2,8 @@
 import 'package:delivery_app_tutorial/common/services/dio/dio.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
-import 'package:delivery_app_tutorial/restaurant/repository/restaurant_repository.dart';
+import 'package:delivery_app_tutorial/restaurant/providers/restaurant_detail_provider.dart';
+import 'package:delivery_app_tutorial/restaurant/providers/restaurant_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:delivery_app_tutorial/common/layouts/default_layout.dart';
@@ -10,9 +11,7 @@ import 'package:delivery_app_tutorial/product/components/product_card.dart';
 import 'package:delivery_app_tutorial/restaurant/components/restaurant_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../common/constants/data.dart';
-
-class RestaurantDetailScreen extends ConsumerWidget {
+class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
 
   const RestaurantDetailScreen({
@@ -20,55 +19,41 @@ class RestaurantDetailScreen extends ConsumerWidget {
     required this.id,
   }) : super(key: key);
 
-  // Future<RestaurantDetail> getRestaurantDetail(WidgetRef ref) async {
-  //   return ref.watch(restaurantRepositoryProvider).getRestaurantDetail(id: id);
-  // }
-  // final dio = ref.watch(dioProvider);
+  @override
+  ConsumerState<RestaurantDetailScreen> createState() =>
+      _RestaurantDetailScreenState();
+}
 
-  // final repository =
-  //     RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
-  // return repository.getRestaurantDetail(id: id);
-
-  /*     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-    final res = await dio.get(
-      'http://$ip/restaurant/$id',
-      options: Options(headers: {
-        'Authorization': 'Bearer $accessToken',
-      }),
-    );
-
-    return res.data; */
+class _RestaurantDetailScreenState
+    extends ConsumerState<RestaurantDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultLayout(
-        title: "붙타는 떡볶이",
-        body: FutureBuilder<RestaurantDetail>(
-          future: ref
-              .watch(restaurantRepositoryProvider)
-              .getRestaurantDetail(id: id),
-          builder: (context, AsyncSnapshot<RestaurantDetail> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(snapshot.error.toString()),
-              );
-            }
+  Widget build(BuildContext context) {
+    final state = ref.watch(restaurantDetailProvider(widget.id));
 
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            // final item = RestaurantDetail.fromJson(snapshot.data!);
-            return CustomScrollView(
-              slivers: [
-                _renderTop(restaurant: snapshot.data!),
-                _renderLabel(),
-                _renderProduct(products: snapshot.data!.products),
-              ],
-            );
-          },
-        ));
+    if (state == null) {
+      return const DefaultLayout(
+          body: Center(
+        child: CircularProgressIndicator(),
+      ));
+    }
+
+    return DefaultLayout(
+      title: state.name,
+      body: CustomScrollView(
+        slivers: [
+          _renderTop(restaurant: state),
+          if (state is RestaurantDetailModel) _renderLabel(),
+          if (state is RestaurantDetailModel)
+            _renderProduct(products: state.products),
+        ],
+      ),
+    );
   }
 
   SliverPadding _renderLabel() {

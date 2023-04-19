@@ -49,14 +49,14 @@ class _RestaurantRepository implements RestaurantRepository {
   }
 
   @override
-  Future<RestaurantDetail> getRestaurantDetail({required id}) async {
+  Future<RestaurantDetailModel> getRestaurantDetail({required id}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<RestaurantDetail>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<RestaurantDetailModel>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -68,7 +68,7 @@ class _RestaurantRepository implements RestaurantRepository {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = RestaurantDetail.fromJson(_result.data!);
+    final value = RestaurantDetailModel.fromJson(_result.data!);
     return value;
   }
 

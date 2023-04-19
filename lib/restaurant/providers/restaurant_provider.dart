@@ -1,4 +1,5 @@
 import 'package:delivery_app_tutorial/common/models/pagination_params.dart';
+import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
 import 'package:delivery_app_tutorial/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +28,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
 
   // 실제 pageination을 진행하고 값을 반환하는것이 아니라
   // 상태 안에 응답받은 레스토랑 모델을 집어 넣을 것이다
-  void paginate({
+  Future<void> paginate({
     int fetchCount = 20,
 
     // true 일때 추가로 데이터 더 가져오기
@@ -124,5 +125,34 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
     } catch (e) {
       state = CursorPaginationError(message: '데이터를 가져오지 못했습니다');
     }
+  }
+
+  void getDetail({
+    required String id,
+  }) async {
+    // 데이터가 없는 상태일때 CursorPagination 이 아닐때
+    if (state is! CursorPagination) {
+      await paginate();
+    }
+
+    // paginate()를 했는데도 CursorPagination 이 아닐때
+    if (state is! CursorPagination) {
+      return null;
+    }
+
+    final pState = state as CursorPagination;
+
+    // id 에 해당이 되는 상세값을 가져와야 한다
+    final res = await repository.getRestaurantDetail(id: id);
+    // res에는 이미 id 에 해당되는 RestaurantDetailModel 이 들어갔다
+    // 이제 이걸로 해야하는것은 pState 안에 id에 해당되는 모델을 찾은다음에
+    // res으로  대체를 해줘야 한다 그 이유는 pState 에 id 에 해당되는 데이터는
+    // 그냥 RestaurantModel 이기 때문이다 그래서 RestaurantDetailModel 인 res 로 대체를 해줘야 한다
+
+    state = pState.copyWith(
+      data: pState.data
+          .map<RestaurantModel>((e) => e.id == id ? res : e)
+          .toList(),
+    );
   }
 }

@@ -42,7 +42,7 @@ abstract class RestaurantRepository {
   @Headers({
     'accessToken': 'true',
   })
-  Future<RestaurantDetail> getRestaurantDetail({
+  Future<RestaurantDetailModel> getRestaurantDetail({
     @Path() required String id,
   });
 }
