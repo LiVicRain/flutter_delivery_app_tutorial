@@ -9,7 +9,7 @@ part 'restaurant_model.g.dart';
 enum RestaurantPriceRange { expensive, medium, cheap }
 
 @JsonSerializable()
-class Restaurant {
+class RestaurantModel {
   final String id;
   final String name;
   @JsonKey(
@@ -23,7 +23,7 @@ class Restaurant {
   final int deliveryTime;
   final int deliveryFee;
 
-  Restaurant({
+  RestaurantModel({
     required this.id,
     required this.name,
     required this.thumbUrl,
@@ -35,11 +35,11 @@ class Restaurant {
     required this.deliveryFee,
   });
 
-  factory Restaurant.fromJson(Map<String, dynamic> json) =>
-      _$RestaurantFromJson(json);
+  factory RestaurantModel.fromJson(Map<String, dynamic> json) =>
+      _$RestaurantModelFromJson(json);
 
   // 현재 인스턴스를 JSON으로 자동으로 바꿔줌
-  Map<String, dynamic> toJson() => _$RestaurantToJson(this);
+  Map<String, dynamic> toJson() => _$RestaurantModelToJson(this);
 
   // factory Restaurant.fromJson({
   //   required Map<String, dynamic> json,

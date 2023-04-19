@@ -104,7 +104,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
   }
 
   SliverToBoxAdapter _renderTop({
-    required Restaurant restaurant,
+    required RestaurantModel restaurant,
   }) {
     return SliverToBoxAdapter(
       child: RestaurantCard.fromModel(

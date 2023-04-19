@@ -31,7 +31,7 @@ abstract class RestaurantRepository {
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPagination<Restaurant>>
+  Future<CursorPagination<RestaurantModel>>
       paginate(); // abstract 이기 때문에 body를 없앤다. 어떤 함수가 있는지만 적는다
 
   // http://$ip/restaurant/:id

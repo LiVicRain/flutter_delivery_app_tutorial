@@ -30,7 +30,7 @@ class RestaurantCard extends StatelessWidget {
   }) : super(key: key);
 
   factory RestaurantCard.fromModel({
-    required Restaurant restaurant,
+    required RestaurantModel restaurant,
     bool isDetail = false,
   }) {
     return RestaurantCard(
