@@ -1,5 +1,6 @@
 import 'package:delivery_app_tutorial/common/models/cursor_pagination_model.dart';
 import 'package:delivery_app_tutorial/common/models/pagination_params.dart';
+import 'package:delivery_app_tutorial/common/repository/base_pagination_repository.dart';
 import 'package:delivery_app_tutorial/common/services/dio/dio.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
@@ -22,7 +23,8 @@ final restaurantRepositoryProvider = Provider<RestaurantRepository>((ref) {
 });
 
 @RestApi()
-abstract class RestaurantRepository {
+abstract class RestaurantRepository
+    implements IBasePaginationRespository<RestaurantModel> {
   // 인스턴스를 생성하지 않게 하기 위해 abstract
   factory RestaurantRepository(Dio dio, {String baseUrl}) =
       _RestaurantRepository;

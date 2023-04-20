@@ -1,10 +1,16 @@
 import 'package:delivery_app_tutorial/common/models/cursor_pagination_model.dart';
+import 'package:delivery_app_tutorial/common/repository/base_pagination_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/pagination_params.dart';
 
-class PaginationProvider extends StateNotifier<CursorPaginationBase> {
-  final  repository;
+class PaginationProvider<U extends IBasePaginationRespository>
+    extends StateNotifier<CursorPaginationBase> {
+  final U repository;
+
+  // <U extends IBasePaginationRespository> 는
+  // U 타입은 IBasePaginationRespository 를 상속한 타입다를 알려준다
+  // 제너릭에서는 implments 가 아닌 extends 를 사용해야 한다
 
   PaginationProvider({
     required this.repository,

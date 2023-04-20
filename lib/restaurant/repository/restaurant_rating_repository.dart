@@ -1,6 +1,7 @@
 import 'package:delivery_app_tutorial/common/constants/data.dart';
 import 'package:delivery_app_tutorial/common/models/cursor_pagination_model.dart';
 import 'package:delivery_app_tutorial/common/models/pagination_params.dart';
+import 'package:delivery_app_tutorial/common/repository/base_pagination_repository.dart';
 import 'package:delivery_app_tutorial/common/services/dio/dio.dart';
 import 'package:delivery_app_tutorial/rating/models/rating_model.dart';
 import 'package:dio/dio.dart' hide Headers;
@@ -19,7 +20,8 @@ final restaurantRatingRepositoryProvider =
 
 // http://ip/restaurant/:rid/rating
 @RestApi()
-abstract class RestaurantRatingRepository {
+abstract class RestaurantRatingRepository
+    implements IBasePaginationRespository<RatingModel> {
   factory RestaurantRatingRepository(Dio dio, {String baseUrl}) =
       _RestaurantRatingRepository;
 
