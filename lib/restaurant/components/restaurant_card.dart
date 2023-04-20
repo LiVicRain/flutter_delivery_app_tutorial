@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:delivery_app_tutorial/common/constants/colors.dart';
+import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
 
 class RestaurantCard extends StatelessWidget {
@@ -14,6 +14,7 @@ class RestaurantCard extends StatelessWidget {
   final int deliveryFee; // 배송 비용
   final double ratings; // 평점
   final bool isDetail;
+  final String? heroKey;
   final String? detail;
 
   const RestaurantCard({
@@ -26,6 +27,7 @@ class RestaurantCard extends StatelessWidget {
     required this.deliveryFee,
     required this.ratings,
     this.isDetail = false,
+    this.heroKey,
     this.detail,
   }) : super(key: key);
 
@@ -46,6 +48,7 @@ class RestaurantCard extends StatelessWidget {
       ratings: restaurant.ratings,
       isDetail: isDetail,
       detail: restaurant is RestaurantDetailModel ? restaurant.detail : null,
+      heroKey: restaurant.id,
     );
   }
 
@@ -53,10 +56,17 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (isDetail) image,
-        if (!isDetail)
+        if (heroKey != null)
+          Hero(
+            tag: ObjectKey(heroKey),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(isDetail ? 0 : 15),
+              child: image,
+            ),
+          ),
+        if (heroKey == null)
           ClipRRect(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(isDetail ? 0 : 15),
             child: image,
           ),
         const SizedBox(height: 10),

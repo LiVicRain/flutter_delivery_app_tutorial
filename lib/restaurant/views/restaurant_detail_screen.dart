@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:delivery_app_tutorial/common/services/dio/dio.dart';
+import 'package:delivery_app_tutorial/rating/components/rating_card.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_detail_model.dart';
 import 'package:delivery_app_tutorial/restaurant/models/restaurant_model.dart';
 import 'package:delivery_app_tutorial/restaurant/providers/restaurant_detail_provider.dart';
@@ -10,6 +10,7 @@ import 'package:delivery_app_tutorial/common/layouts/default_layout.dart';
 import 'package:delivery_app_tutorial/product/components/product_card.dart';
 import 'package:delivery_app_tutorial/restaurant/components/restaurant_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
@@ -48,10 +49,48 @@ class _RestaurantDetailScreenState
       body: CustomScrollView(
         slivers: [
           _renderTop(restaurant: state),
+          if (state is! RestaurantDetailModel) _renderLoading(),
           if (state is RestaurantDetailModel) _renderLabel(),
           if (state is RestaurantDetailModel)
             _renderProduct(products: state.products),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+            sliver: SliverToBoxAdapter(
+              child: RatingCard(
+                avatarImage: AssetImage('assets/img/logo/codefactory_logo.png'),
+                rating: 4,
+                images: [],
+                email: 'tmddntlr@gmail.com',
+                content:
+                    '맛있습니다. 믿을 수 없이... 맛있습니다. 믿을 수 없이... 맛있습니다. 믿을 수 없이... 맛있습니다. 믿을 수 없이... 맛있습니다. 믿을 수 없이... 맛있습니다. 믿을 수 없이... ',
+              ),
+            ),
+          )
         ],
+      ),
+    );
+  }
+
+  SliverPadding _renderLoading() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 15.0,
+        horizontal: 15.0,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          List.generate(
+              3,
+              (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: SkeletonParagraph(
+                      style: const SkeletonParagraphStyle(
+                        lines: 5,
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                  )),
+        ),
       ),
     );
   }
