@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:delivery_app_tutorial/common/models/model_with_id.dart';
 import 'package:delivery_app_tutorial/common/utils/data_utils.dart';
 import 'package:delivery_app_tutorial/user/models/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -6,7 +7,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'rating_model.g.dart';
 
 @JsonSerializable()
-class RatingModel {
+class RatingModel implements IModelWithId {
   final String id;
   final UserModel user;
   final int rating;

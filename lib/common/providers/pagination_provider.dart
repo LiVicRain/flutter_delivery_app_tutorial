@@ -1,10 +1,12 @@
 import 'package:delivery_app_tutorial/common/models/cursor_pagination_model.dart';
+import 'package:delivery_app_tutorial/common/models/model_with_id.dart';
 import 'package:delivery_app_tutorial/common/repository/base_pagination_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/pagination_params.dart';
 
-class PaginationProvider<U extends IBasePaginationRespository>
+class PaginationProvider<T extends IModelWithId,
+        U extends IBasePaginationRespository<T>>
     extends StateNotifier<CursorPaginationBase> {
   final U repository;
 
@@ -41,7 +43,7 @@ class PaginationProvider<U extends IBasePaginationRespository>
       );
 
       if (fetchMore) {
-        final pState = state as CursorPagination;
+        final pState = state as CursorPagination<T>;
 
         state = CursorPaginationFetchingMore(
           meta: pState.meta,
@@ -53,8 +55,8 @@ class PaginationProvider<U extends IBasePaginationRespository>
         );
       } else {
         if (state is CursorPagination && !forceRefetch) {
-          final pState = state as CursorPagination;
-          state = CursorPaginationRefetching(
+          final pState = state as CursorPagination<T>;
+          state = CursorPaginationRefetching<T>(
             meta: pState.meta,
             data: pState.data,
           );
@@ -68,7 +70,7 @@ class PaginationProvider<U extends IBasePaginationRespository>
       );
 
       if (state is CursorPaginationFetchingMore) {
-        final pState = state as CursorPaginationFetchingMore;
+        final pState = state as CursorPaginationFetchingMore<T>;
         state = res.copyWith(data: [
           ...pState.data,
           ...res.data,

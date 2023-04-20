@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:delivery_app_tutorial/common/models/model_with_id.dart';
 import 'package:delivery_app_tutorial/common/utils/data_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -9,7 +10,7 @@ part 'restaurant_model.g.dart';
 enum RestaurantPriceRange { expensive, medium, cheap }
 
 @JsonSerializable()
-class RestaurantModel {
+class RestaurantModel implements IModelWithId {
   final String id;
   final String name;
   @JsonKey(
