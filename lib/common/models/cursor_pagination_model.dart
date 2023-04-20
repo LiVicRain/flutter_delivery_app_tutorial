@@ -16,7 +16,6 @@ class CursorPaginationError extends CursorPaginationBase {
   });
 }
 
-
 // 데이터가 표시될때
 @JsonSerializable(
   genericArgumentFactories: true,
@@ -33,7 +32,7 @@ class CursorPagination<T> extends CursorPaginationBase {
     CursorPaginationMeta? meta,
     List<T>? data,
   }) {
-    return CursorPagination(
+    return CursorPagination<T>(
       meta: meta ?? this.meta,
       data: data ?? this.data,
     );
