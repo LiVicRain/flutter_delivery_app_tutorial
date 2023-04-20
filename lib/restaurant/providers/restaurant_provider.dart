@@ -44,10 +44,19 @@ class RestaurantStateNotifier
     // res으로  대체를 해줘야 한다 그 이유는 pState 에 id 에 해당되는 데이터는
     // 그냥 RestaurantModel 이기 때문이다 그래서 RestaurantDetailModel 인 res 로 대체를 해줘야 한다
 
-    state = pState.copyWith(
-      data: pState.data
-          .map<RestaurantModel>((e) => e.id == id ? res : e)
-          .toList(),
-    );
+    // 만약 RestaurantModel id 가 1, 2, 3 만 있을때 10을 요청하는 경우
+    // 데이터가 없을때 그냥 캐시의 끝에다가 데이터를 추가해버린다
+    if (pState.data.where((element) => element.id == id).isEmpty) {
+      // 존재하지 않을 경우
+      state = pState.copyWith(
+        data: <RestaurantModel>[...pState.data, res],
+      );
+    } else {
+      state = pState.copyWith(
+        data: pState.data
+            .map<RestaurantModel>((e) => e.id == id ? res : e)
+            .toList(),
+      );
+    }
   }
 }

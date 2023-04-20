@@ -139,7 +139,8 @@ class _RestaurantDetailScreenState
 
             return Padding(
                 padding: const EdgeInsets.only(top: 15),
-                child: ProductCard.fromModel(restaurantProduct: model));
+                child: ProductCard.fromRestaurantProductModel(
+                    restaurantProduct: model));
           },
           childCount: products.length,
         ),
