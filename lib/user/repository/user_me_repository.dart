@@ -1,4 +1,6 @@
 import 'package:delivery_app_tutorial/common/services/dio/dio.dart';
+import 'package:delivery_app_tutorial/user/models/basket_item_model.dart';
+import 'package:delivery_app_tutorial/user/models/patch_basket_body.dart';
 import 'package:delivery_app_tutorial/user/models/user_model.dart';
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,11 +24,14 @@ abstract class UserMeRepository {
   @Headers({'accessToken': 'true'})
   Future<UserModel> getMe();
 
-  /* 
-  {
-    "id": "f55b32d2-4d68-4c1e-a3ca-da9d7d0d92e5",
-    "username": "test@codefactory.ai",
-    "imageUrl": "/img//logo/codefactory_logo.png"
-  } 
-   */
+  @GET('/basket')
+  @Headers({'accessToken': 'true'})
+  Future<List<BasketItemModel>> getBasket();
+
+  @PATCH('/basket')
+  @Headers({'accessToken': 'true'})
+  Future<List<BasketItemModel>> patchBasket({
+    @Body() required PatchBasketBody body,
+    // PatchBasketBody 의 toJson 이 실행하면 body 값으로 변경되어 들어간다
+  });
 }
