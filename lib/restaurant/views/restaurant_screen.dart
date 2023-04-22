@@ -5,6 +5,7 @@ import 'package:delivery_app_tutorial/restaurant/providers/restaurant_provider.d
 import 'package:delivery_app_tutorial/restaurant/views/restaurant_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class RestaurantScreen extends ConsumerStatefulWidget {
   const RestaurantScreen({super.key});
@@ -83,11 +84,13 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
           final pItem = cp.data[index];
 
           return GestureDetector(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => RestaurantDetailScreen(
-                id: pItem.id,
-              ),
-            )),
+            onTap: () => context.goNamed(
+              RestaurantDetailScreen.routeName,
+              params: {
+                'rid': pItem.id,
+              },
+              queryParams: {},
+            ),
             child: RestaurantCard.fromModel(restaurant: pItem),
           );
         },

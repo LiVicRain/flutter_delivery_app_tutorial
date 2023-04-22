@@ -6,6 +6,8 @@ import 'package:delivery_app_tutorial/common/constants/data.dart';
 import 'package:delivery_app_tutorial/common/layouts/default_layout.dart';
 import 'package:delivery_app_tutorial/common/services/secure_storage/secure_storage.dart';
 import 'package:delivery_app_tutorial/common/views/root_tab.dart';
+import 'package:delivery_app_tutorial/user/models/user_model.dart';
+import 'package:delivery_app_tutorial/user/providers/user_me_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +15,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/components/custom_text_form_field.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'login';
+
   const LoginScreen({super.key});
 
   @override
@@ -25,9 +29,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dio = Dio();
-
-    // final storage = ref.watch(secureStorageProvider);
+    final state = ref.watch(userMeProvider);
 
     return DefaultLayout(
       body: SingleChildScrollView(
@@ -65,39 +67,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () async {
-                    final rawString = '$userName:$password';
-
-                    //base64로 인코딩
-                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
-
-                    String token = stringToBase64.encode(rawString);
-
-                    final res = await dio.post(
-                      'http://$ip/auth/login',
-                      options: Options(
-                        headers: {
-                          'Authorization': 'Basic $token',
+                  onPressed: state is UserModelLoading
+                      ? null
+                      : () async {
+                          ref
+                              .read(userMeProvider.notifier)
+                              .login(userName: userName, password: password);
                         },
-                      ),
-                    );
-
-                    final refreshToken = res.data['refreshToken'];
-                    final accessToken = res.data['accessToken'];
-
-                    final storage = ref.read(secureStorageProvider);
-
-                    await storage.write(
-                        key: REFRESH_TOKEN_KEY, value: refreshToken);
-                    await storage.write(
-                        key: ACCESS_TOKEN_KEY, value: accessToken);
-
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => const RootTab(),
-                        ),
-                        (route) => false);
-                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: uPrimaryColor,
                   ),

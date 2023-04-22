@@ -81,26 +81,26 @@ class _PaginationListViewState<T extends IModelWithId>
     }
 
     // 캐스팅
-    final pState = state as CursorPagination<T>;
+    final cp = state as CursorPagination<T>;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: ListView.separated(
         controller: _scrollController,
-        itemCount: pState.data.length + 1,
+        itemCount: cp.data.length + 1,
         itemBuilder: (context, index) {
-          if (index == pState.data.length) {
+          if (index == cp.data.length) {
             // index == cp.data.length 는 마지막을 의미 data 는 0부터 시작
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Center(
-                child: state is CursorPaginationFetchingMore
+                child: cp is CursorPaginationFetchingMore
                     ? const CircularProgressIndicator()
                     : const Text('마지막 데이터입니다'),
               ),
             );
           }
-          final pItem = pState.data[index];
+          final pItem = cp.data[index];
 
           return widget.itemBuilder(
             context,
